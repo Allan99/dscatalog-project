@@ -1,6 +1,7 @@
 package com.devsuperior.dscatalog.entities;
 
 import jakarta.persistence.*;
+import org.springframework.boot.CommandLineRunner;
 
 import java.util.HashSet;
 import java.util.Objects;
@@ -93,4 +94,5 @@ public class Product {
     public int hashCode() {
         return Objects.hashCode(id);
     }
+
 }
