@@ -16,6 +16,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -38,8 +39,8 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public Page<UserDTO> findAll(Pageable pageable){
-        Page<User> userPage = repository.findAll(pageable);
+    public Page<UserDTO> findAll(PageRequest pageRequest){
+        Page<User> userPage = repository.findAll(pageRequest);
         return userPage.map(u -> modelMapper.map(u, UserDTO.class));
     }
 
