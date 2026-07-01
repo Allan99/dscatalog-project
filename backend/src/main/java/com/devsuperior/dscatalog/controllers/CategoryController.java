@@ -8,7 +8,9 @@ import com.devsuperior.dscatalog.services.exceptions.ResourceNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -29,8 +31,16 @@ public class CategoryController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<CategoryDTO>> findAll(Pageable pageable){
-        Page<CategoryDTO> categoryDTOPage = service.findAll(pageable);
+    public ResponseEntity<Page<CategoryDTO>> findAll(
+            @RequestParam(value = "page", defaultValue = "0") Integer page,
+            @RequestParam(value = "linesPerPage", defaultValue = "12") Integer linePerPage,
+            @RequestParam(value = "orderBy", defaultValue = "moment") String orderBy,
+            @RequestParam(value = "direction", defaultValue = "ASC") String direction
+    ){
+        PageRequest pageRequest = PageRequest.of(page,
+                linePerPage, Sort.Direction.valueOf(direction), orderBy);
+
+        Page<CategoryDTO> categoryDTOPage = service.findAll(pageRequest);
         return ResponseEntity.ok(categoryDTOPage);
     }
 
