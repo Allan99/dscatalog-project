@@ -27,15 +27,8 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<UserDTO>> findAll(
-            @RequestParam(value = "page", defaultValue = "0") Integer page,
-            @RequestParam(value = "linesPerPage", defaultValue = "12") Integer linePerPage,
-            @RequestParam(value = "orderBy", defaultValue = "moment") String orderBy,
-            @RequestParam(value = "direction", defaultValue = "ASC") String direction
-    ){
-        PageRequest pageRequest = PageRequest.of(page,
-                linePerPage, Sort.Direction.valueOf(direction), orderBy);
-        Page<UserDTO> userDTOPage = service.findAll(pageRequest);
+    public ResponseEntity<Page<UserDTO>> findAll(Pageable pageable){
+        Page<UserDTO> userDTOPage = service.findAll(pageable);
         return ResponseEntity.ok(userDTOPage);
     }
 

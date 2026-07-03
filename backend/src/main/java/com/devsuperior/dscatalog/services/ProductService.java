@@ -4,6 +4,7 @@ import com.devsuperior.dscatalog.dto.CategoryDTO;
 import com.devsuperior.dscatalog.dto.ProductDTO;
 import com.devsuperior.dscatalog.entities.Category;
 import com.devsuperior.dscatalog.entities.Product;
+import com.devsuperior.dscatalog.repositories.CategoryRepository;
 import com.devsuperior.dscatalog.repositories.ProductRepository;
 import com.devsuperior.dscatalog.services.exceptions.DatabaseException;
 import com.devsuperior.dscatalog.services.exceptions.ResourceNotFoundException;
@@ -23,6 +24,9 @@ public class ProductService {
     @Autowired
     private ProductRepository repository;
 
+    @Autowired
+    private CategoryRepository categoryRepository;
+
     @Transactional(readOnly = true)
     public ProductDTO findById(Long id){
         Product product = repository.findById(id).orElseThrow(
@@ -31,8 +35,8 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public Page<ProductDTO> findAll(PageRequest pageRequest){
-        Page<Product> products = repository.findAll(pageRequest);
+    public Page<ProductDTO> findAll(Pageable pageable){
+        Page<Product> products = repository.findAll(pageable);
         return products.map(p -> new ProductDTO(p));
     }
 
@@ -69,10 +73,9 @@ public class ProductService {
         target.setDescription(source.getDescription());
         target.setImgUrl(source.getImgUrl());
         target.setPrice(source.getPrice());
-        Category category = new Category();
+        target.getCategories().clear();
         for(CategoryDTO categoryDTO: source.getCategories()){
-            category.setId(categoryDTO.getId());
-            category.setName(categoryDTO.getName());
+            Category category = categoryRepository.getReferenceById(categoryDTO.getId());
             target.getCategories().add(category);
         }
     }

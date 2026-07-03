@@ -8,6 +8,8 @@ import com.devsuperior.dscatalog.entities.Category;
 import com.devsuperior.dscatalog.entities.Product;
 import com.devsuperior.dscatalog.entities.Role;
 import com.devsuperior.dscatalog.entities.User;
+import com.devsuperior.dscatalog.repositories.CategoryRepository;
+import com.devsuperior.dscatalog.repositories.RoleRepository;
 import com.devsuperior.dscatalog.repositories.UserRepository;
 import com.devsuperior.dscatalog.services.exceptions.DatabaseException;
 import com.devsuperior.dscatalog.services.exceptions.ResourceNotFoundException;
@@ -28,6 +30,9 @@ public class UserService {
     @Autowired
     private UserRepository repository;
 
+    @Autowired
+    private RoleRepository roleRepository;
+
     @Transactional(readOnly = true)
     public UserDTO findById(Long id){
         User user = repository.findById(id).orElseThrow(
@@ -36,8 +41,8 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public Page<UserDTO> findAll(PageRequest pageRequest){
-        Page<User> userPage = repository.findAll(pageRequest);
+    public Page<UserDTO> findAll(Pageable pageable){
+        Page<User> userPage = repository.findAll(pageable);
         return userPage.map(u -> new UserDTO(u));
     }
 
@@ -72,10 +77,9 @@ public class UserService {
         target.setLastName(source.getLastName());
         target.setPassword(source.getPassword());
         target.setEmail(source.getEmail());
-        Role role = new Role();
+        target.getRoles().clear();
         for(RoleDTO roleDTO: source.getRoles()){
-            role.setAuthority(roleDTO.getAuthority());
-            role.setId(roleDTO.getId());
+            Role role = roleRepository.getReferenceById(roleDTO.getId());
             target.getRoles().add(role);
         }
         return target;
