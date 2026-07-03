@@ -16,26 +16,25 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.stream.Collectors;
+
 @Service
 public class CategoryService {
 
     @Autowired
     private CategoryRepository repository;
 
-    @Autowired
-    private ModelMapper modelMapper;
-
     @Transactional(readOnly = true)
     public CategoryDTO findById(Long id){
         Category category =  repository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("Resourse not found"));
-        return modelMapper.map(category, CategoryDTO.class);
+        return new CategoryDTO(category);
     }
 
     @Transactional(readOnly = true)
     public Page<CategoryDTO> findAll(PageRequest pageRequest){
         Page<Category> categories = repository.findAll(pageRequest);
-        return categories.map(c -> modelMapper.map(c, CategoryDTO.class));
+        return categories.map(c -> new CategoryDTO(c));
     }
 
     @Transactional
@@ -43,7 +42,7 @@ public class CategoryService {
         Category category = new Category();
         category.setName(categoryDTO.getName());
         category = repository.save(category);
-        return modelMapper.map(category, CategoryDTO.class);
+        return new CategoryDTO(category);
     }
 
     @Transactional
@@ -52,7 +51,7 @@ public class CategoryService {
             Category category = repository.getReferenceById(id);
             category.setName(dto.getName());
             category = repository.save(category);
-            return modelMapper.map(category, CategoryDTO.class);
+            return new CategoryDTO(category);
         }catch(EntityNotFoundException e){
             throw new ResourceNotFoundException("Resource not found");
         }

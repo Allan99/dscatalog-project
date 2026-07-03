@@ -1,5 +1,6 @@
 package com.devsuperior.dscatalog.dto;
 
+import com.devsuperior.dscatalog.entities.Category;
 import com.devsuperior.dscatalog.entities.Product;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -23,6 +24,11 @@ public class CategoryDTO {
     public CategoryDTO(Long id, String name) {
         this.id = id;
         this.name = name;
+    }
+
+    public CategoryDTO(Category entity) {
+        this.id = entity.getId();
+        this.name = entity.getName();
     }
 
     public Long getId() {

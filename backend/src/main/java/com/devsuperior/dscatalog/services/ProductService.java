@@ -23,20 +23,17 @@ public class ProductService {
     @Autowired
     private ProductRepository repository;
 
-    @Autowired
-    private ModelMapper modelMapper;
-
     @Transactional(readOnly = true)
     public ProductDTO findById(Long id){
         Product product = repository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("Resource not found"));
-        return modelMapper.map(product, ProductDTO.class);
+        return new ProductDTO(product, product.getCategories());
     }
 
     @Transactional(readOnly = true)
     public Page<ProductDTO> findAll(PageRequest pageRequest){
         Page<Product> products = repository.findAll(pageRequest);
-        return products.map(p -> modelMapper.map(p, ProductDTO.class));
+        return products.map(p -> new ProductDTO(p));
     }
 
     @Transactional
@@ -44,7 +41,7 @@ public class ProductService {
         Product product = new Product();
         dtoToProduct(productDTO, product);
         product = repository.save(product);
-        return modelMapper.map(product, ProductDTO.class);
+        return new ProductDTO(product);
     }
 
     @Transactional
@@ -52,7 +49,7 @@ public class ProductService {
         Product product = repository.getReferenceById(id);
         dtoToProduct(productDTO, product);
         product = repository.save(product);
-        return modelMapper.map(product, ProductDTO.class);
+        return new ProductDTO(product);
     }
 
     @Transactional(propagation = Propagation.SUPPORTS)
@@ -72,8 +69,11 @@ public class ProductService {
         target.setDescription(source.getDescription());
         target.setImgUrl(source.getImgUrl());
         target.setPrice(source.getPrice());
+        Category category = new Category();
         for(CategoryDTO categoryDTO: source.getCategories()){
-            target.getCategories().add(modelMapper.map(categoryDTO, Category.class));
+            category.setId(categoryDTO.getId());
+            category.setName(categoryDTO.getName());
+            target.getCategories().add(category);
         }
     }
 }

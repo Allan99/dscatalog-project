@@ -1,5 +1,6 @@
 package com.devsuperior.dscatalog.dto;
 
+import com.devsuperior.dscatalog.entities.Role;
 import com.devsuperior.dscatalog.entities.User;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -23,6 +24,11 @@ public class RoleDTO {
     public RoleDTO(Long id, String authority) {
         this.id = id;
         this.authority = authority;
+    }
+
+    public RoleDTO(Role entity) {
+        this.id = entity.getId();
+        this.authority = entity.getAuthority();
     }
 
     public Long getId() {

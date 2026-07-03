@@ -34,7 +34,7 @@ public class CategoryController {
     public ResponseEntity<Page<CategoryDTO>> findAll(
             @RequestParam(value = "page", defaultValue = "0") Integer page,
             @RequestParam(value = "linesPerPage", defaultValue = "12") Integer linePerPage,
-            @RequestParam(value = "orderBy", defaultValue = "moment") String orderBy,
+            @RequestParam(value = "orderBy", defaultValue = "createdAt") String orderBy,
             @RequestParam(value = "direction", defaultValue = "ASC") String direction
     ){
         PageRequest pageRequest = PageRequest.of(page,

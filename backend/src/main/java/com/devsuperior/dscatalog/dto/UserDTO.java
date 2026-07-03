@@ -1,6 +1,7 @@
 package com.devsuperior.dscatalog.dto;
 
 import com.devsuperior.dscatalog.entities.Role;
+import com.devsuperior.dscatalog.entities.User;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
@@ -24,6 +25,14 @@ public class UserDTO {
         this.lastName = lastName;
         this.email = email;
         this.password = password;
+    }
+
+    public UserDTO(User entity) {
+        this.id = entity.getId();
+        this.firstName = entity.getFirstName();
+        this.lastName = entity.getLastName();
+        this.email = entity.getEmail();
+        this.password = entity.getPassword();
     }
 
     public Long getId() {
