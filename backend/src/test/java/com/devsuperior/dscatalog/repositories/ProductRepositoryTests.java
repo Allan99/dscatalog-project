@@ -16,6 +16,7 @@ public class ProductRepositoryTests {
     private ProductRepository repository;
 
     private Long existingId = 1L;
+    private Long nonExistingId = 3000L;
     private Long countTotalProducts = 25L;
 
     @Test
@@ -34,5 +35,17 @@ public class ProductRepositoryTests {
         repository.deleteById(existingId);
         Optional<Product> result = repository.findById(existingId);
         Assertions.assertFalse(result.isPresent());
+    }
+    
+    @Test
+    public void findByIdShouldReturnNonEmptyOptionalWhenIdExists() {
+    	Optional<Product> result = repository.findById(existingId);
+    	Assertions.assertTrue(result.isPresent());
+    }
+    
+    @Test
+    public void findByIdShouldReturnEmptyOptionalWhenIdNotExists() {
+    	Optional<Product> result = repository.findById(nonExistingId);
+    	Assertions.assertTrue(!result.isPresent());
     }
 }
