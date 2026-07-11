@@ -1,7 +1,9 @@
-package com.devsuperior.dscatalog.repositories;
+package com.devsuperior.dscatalog.tests.repositories;
 
 import com.devsuperior.dscatalog.entities.Product;
-import com.devsuperior.dscatalog.tests.ProductFactory;
+import com.devsuperior.dscatalog.repositories.ProductRepository;
+import com.devsuperior.dscatalog.tests.Factory.ProductFactory;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

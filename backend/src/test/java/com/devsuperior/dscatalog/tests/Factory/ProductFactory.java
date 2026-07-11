@@ -1,4 +1,4 @@
-package com.devsuperior.dscatalog.tests;
+package com.devsuperior.dscatalog.tests.Factory;
 
 import com.devsuperior.dscatalog.dto.ProductDTO;
 import com.devsuperior.dscatalog.entities.Category;
