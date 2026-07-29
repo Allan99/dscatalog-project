@@ -1,6 +1,5 @@
 package com.devsuperior.dscatalog.tests.services;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Assertions;
@@ -19,8 +18,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import com.devsuperior.dscatalog.Factory;
 import com.devsuperior.dscatalog.dto.ProductDTO;
+import com.devsuperior.dscatalog.entities.Category;
 import com.devsuperior.dscatalog.entities.Product;
+import com.devsuperior.dscatalog.repositories.CategoryRepository;
 import com.devsuperior.dscatalog.repositories.ProductRepository;
 import com.devsuperior.dscatalog.services.ProductService;
 import com.devsuperior.dscatalog.services.exceptions.DatabaseException;
@@ -35,11 +37,15 @@ public class ProductServiceTests {
 	@Mock
 	private ProductRepository repository;
 	
+	@Mock
+	private CategoryRepository categoryRepository;
+	
 	private long existingId;
 	private long nonExistingId;
 	private long dependentId;
 	private PageImpl<Product> page;
 	private Product product;
+	private Category category;
 	
 	@BeforeEach
 	void setUp() throws Exception {
@@ -49,6 +55,7 @@ public class ProductServiceTests {
 		dependentId = 3L;
 		//page = new PageImpl<>(List.of(product));
 		product = new Product();
+		category = Factory.category();
 		
 		Mockito.when(repository.findAll((Pageable) ArgumentMatchers.any())).thenReturn(page);
 		Mockito.when(repository.save(ArgumentMatchers.any())).thenReturn(product);
@@ -62,10 +69,21 @@ public class ProductServiceTests {
 	    Mockito.when(repository.existsById(nonExistingId)).thenReturn(false);	
 	    Mockito.when(repository.existsById(dependentId)).thenReturn(true);
 	    
+	    Mockito.when(categoryRepository.existsById(existingId)).thenReturn(true);
+	    Mockito.when(categoryRepository.existsById(nonExistingId)).thenReturn(false);	
+	    Mockito.when(categoryRepository.existsById(dependentId)).thenReturn(true);
+	    
 	}
 	
 	@Test
-	public void findByIdShouldThrowResourceNotFoundExceptionWhenIdNonExistent() {
+	public void updateShouldReturnProductDTOWhenIdExists() {
+		ProductDTO productDTO = service.update(existingId, new ProductDTO());
+		Assertions.assertNotNull(productDTO);
+		
+	}
+	
+	@Test
+	public void findByIdShouldThrowResourceNotFoundExceptionWhenIdDoesNotExist() {
 		Assertions.assertThrows(ResourceNotFoundException.class, () -> {
 			service.findById(nonExistingId);
 		});
