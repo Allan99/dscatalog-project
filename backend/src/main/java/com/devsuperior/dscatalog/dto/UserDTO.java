@@ -18,6 +18,10 @@ public class UserDTO {
     private String password;
 
     private Set<RoleDTO> roles = new HashSet<>();
+    
+    public UserDTO() {
+    	
+    }
 
     public UserDTO(Long id, String firstName, String lastName, String email, String password) {
         this.id = id;
@@ -33,6 +37,7 @@ public class UserDTO {
         this.lastName = entity.getLastName();
         this.email = entity.getEmail();
         this.password = entity.getPassword();
+        entity.getRoles().forEach(role -> this.roles.add(new RoleDTO(role)));
     }
 
     public Long getId() {
