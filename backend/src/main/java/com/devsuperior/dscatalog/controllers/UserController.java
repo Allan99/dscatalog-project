@@ -40,11 +40,11 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserInsertDTO> insert(@RequestBody UserInsertDTO userDTO){
-        userDTO = service.insert(userDTO);
+    public ResponseEntity<UserDTO> insert(@RequestBody UserInsertDTO userDTO){
+        UserDTO newDTO = service.insert(userDTO);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-                .buildAndExpand(userDTO.getId()).toUri();
-        return ResponseEntity.created(uri).body(userDTO);
+                .buildAndExpand(newDTO.getId()).toUri();
+        return ResponseEntity.created(uri).body(newDTO);
     }
 
     @PutMapping(value = "/{id}")

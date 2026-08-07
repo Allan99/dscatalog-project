@@ -64,12 +64,12 @@ public class UserService {
     }
 
     @Transactional
-    public UserInsertDTO insert(UserInsertDTO userInsertDTO){
+    public UserDTO insert(UserInsertDTO userInsertDTO){
         User user = new User();
         user = userDtoToUser(userInsertDTO, user);
         user.setPassword(passwordEncoder.encode(userInsertDTO.getPassword()));
         user = repository.save(user);
-        return new UserInsertDTO(user);
+        return new UserDTO(user);
     }
 
     private User userDtoToUser(UserDTO source, User target){
