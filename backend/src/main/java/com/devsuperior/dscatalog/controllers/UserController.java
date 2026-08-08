@@ -2,6 +2,7 @@ package com.devsuperior.dscatalog.controllers;
 
 import java.net.URI;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -40,7 +41,7 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserDTO> insert(@RequestBody UserInsertDTO userDTO){
+    public ResponseEntity<UserDTO> insert(@Valid @RequestBody UserInsertDTO userDTO){
         UserDTO newDTO = service.insert(userDTO);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(newDTO.getId()).toUri();
@@ -48,7 +49,8 @@ public class UserController {
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<UserDTO> update(@PathVariable Long id, @RequestBody UserDTO userDTO){
+    public ResponseEntity<UserDTO> update(@PathVariable Long id,
+                                          @Valid @RequestBody UserDTO userDTO){
         userDTO = service.update(id, userDTO);
         return ResponseEntity.ok(userDTO);
     }
