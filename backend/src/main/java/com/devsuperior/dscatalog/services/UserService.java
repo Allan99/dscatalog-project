@@ -1,5 +1,6 @@
 package com.devsuperior.dscatalog.services;
 
+import com.devsuperior.dscatalog.dto.UserUpdateDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -45,7 +46,7 @@ public class UserService {
     }
 
     @Transactional
-    public UserDTO update(Long id, UserDTO userDTO){
+    public UserDTO update(Long id, UserUpdateDTO userDTO){
         User user = repository.getReferenceById(id);
         user = userDtoToUser(userDTO, user);
         return new UserDTO(user);
